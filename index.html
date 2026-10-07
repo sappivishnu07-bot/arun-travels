@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Arun Travels - AI Smart Travel Planner</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Arial,sans-serif;background:#f5f8fc;color:#172033}
+nav{padding:18px 7%;display:flex;justify-content:space-between;align-items:center;background:white;box-shadow:0 2px 12px #0001;position:sticky;top:0;z-index:10}
+.logo{font-size:25px;font-weight:bold;color:#087f8c}.logo span{color:#ff7900}
+nav a{margin-left:20px;text-decoration:none;color:#172033;font-weight:bold}
+.hero{padding:100px 7%;color:white;background:linear-gradient(120deg,#075e68,#12a4ad)}
+.hero h1{font-size:60px;margin-bottom:20px}.hero h1 span{color:#ffd166}
+.hero p{font-size:19px;max-width:650px;line-height:1.7;margin-bottom:25px}
+button{border:0;padding:14px 22px;border-radius:8px;background:#ff7900;color:white;font-weight:bold;cursor:pointer}
+section{padding:65px 7%}.title{text-align:center;margin-bottom:35px}.title h2{font-size:35px;margin-bottom:8px}.title p{color:#687386}
+.planner{background:white}.box{max-width:1050px;margin:auto;padding:30px;border-radius:18px;box-shadow:0 5px 30px #0001}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+label{font-weight:bold;display:block;margin-bottom:7px}
+input,select{width:100%;padding:13px;border:1px solid #ddd;border-radius:7px}
+.full{grid-column:1/-1}.interests{display:flex;flex-wrap:wrap;gap:10px}
+.interests label{background:#eef7f8;padding:9px 12px;border-radius:20px;font-weight:normal}
+.interests input{width:auto}.generate{width:100%;margin-top:20px}
+.result{display:none;margin-top:25px;padding:25px;background:#effbfc;border-left:5px solid #087f8c;border-radius:10px}
+.cards{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:20px 0}
+.card{text-align:center;background:white;padding:15px;border-radius:9px}.card strong{display:block;font-size:20px;color:#087f8c;margin:5px}
+.day{background:white;padding:18px;margin:10px 0;border-left:4px solid #ff7900;border-radius:8px}
+.budget-row{display:flex;justify-content:space-between;padding:10px;border-bottom:1px solid #ddd}
+.destinations{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.destination{background:white;border-radius:15px;overflow:hidden;box-shadow:0 4px 20px #0001}
+.pic{height:160px;display:flex;align-items:center;justify-content:center;font-size:65px;background:#dff6f8}
+.info{padding:20px}.info p{color:#687386;margin-top:8px;line-height:1.5}
+.features{display:grid;grid-template-columns:repeat(4,1fr);gap:18px}
+.feature{background:white;padding:25px;text-align:center;border-radius:12px;box-shadow:0 3px 15px #0001}
+.feature p{color:#687386;margin-top:8px;line-height:1.5}
+.assistant{background:#075e68;color:white}.chat{max-width:750px;margin:auto;background:white;color:#172033;border-radius:15px;overflow:hidden}
+.chat-head{background:#ff7900;padding:18px;color:white;font-weight:bold}.messages{height:260px;padding:18px;overflow:auto}
+.msg{padding:11px 14px;margin-bottom:10px;border-radius:10px;max-width:80%;background:#eef7f8}
+.user{background:#087f8c;color:white;margin-left:auto}.chat-input{display:flex;border-top:1px solid #ddd}
+.chat-input input{border:0;border-radius:0}.chat-input button{border-radius:0}
+footer{background:#111827;color:white;text-align:center;padding:30px}footer span{color:#ff7900}
+@media(max-width:800px){.grid,.destinations,.features{grid-template-columns:1fr}.cards{grid-template-columns:1fr 1fr}nav a{margin-left:8px;font-size:13px}.hero h1{font-size:43px}.full{grid-column:auto}}
+@media(max-width:480px){nav{padding:14px 4%;align-items:flex-start;gap:12px;flex-direction:column}nav a{margin:0 12px 0 0}.hero{padding:70px 5%}section{padding:45px 5%}.box{padding:18px}}
+</style>
+</head>
+<body>
+<nav>
+<div class="logo">Arun <span>Travels</span> ✈️</div>
+<div><a href="#home">Home</a><a href="#planner">Plan Trip</a><a href="#destinations">Destinations</a><a href="#ai">AI Assistant</a></div>
+</nav>
+<header class="hero" id="home">
+<h1>Explore More.<br><span>Plan Smarter.</span></h1>
+<p>Welcome to Arun Travels — your AI-powered travel companion. Create personalized itineraries, calculate your budget and discover amazing destinations.</p>
+<button onclick="document.getElementById('planner').scrollIntoView({behavior:'smooth'})">✨ Plan My Trip</button>
+</header>
+<section class="planner" id="planner">
+<div class="title"><h2>🤖 AI Smart Travel Planner</h2><p>Enter your travel preferences and generate your personalized plan.</p></div>
+<div class="box">
+<div class="grid">
+<div><label for="destination">📍 Destination</label><input id="destination" placeholder="Example: Goa"></div>
+<div><label for="travellers">👥 Travellers</label><input id="travellers" type="number" value="2" min="1"></div>
+<div><label for="days">📅 Days</label><input id="days" type="number" value="4" min="1" max="30"></div>
+<div><label for="budget">💰 Budget ₹</label><input id="budget" type="number" value="25000" min="1"></div>
+<div><label for="style">🚗 Travel Style</label><select id="style"><option>Budget Friendly</option><option>Comfort</option><option>Luxury</option><option>Adventure</option></select></div>
+<div><label for="season">🌤️ Season</label><select id="season"><option>Any Season</option><option>Summer</option><option>Winter</option><option>Monsoon</option></select></div>
+<div class="full"><label>❤️ Interests</label><div class="interests">
+<label><input type="checkbox" value="Beaches"> 🏖️ Beaches</label><label><input type="checkbox" value="Adventure"> 🧗 Adventure</label><label><input type="checkbox" value="Food"> 🍴 Food</label><label><input type="checkbox" value="Culture"> 🏛️ Culture</label><label><input type="checkbox" value="Nature"> 🌲 Nature</label><label><input type="checkbox" value="Nightlife"> 🌃 Nightlife</label><label><input type="checkbox" value="Shopping"> 🛍️ Shopping</label>
+</div></div></div>
+<button class="generate" onclick="generatePlan()">🚀 Generate AI Travel Plan</button>
+<div class="result" id="result">
+<h2>✨ Your Arun Travels Plan</h2>
+<div class="cards"><div class="card">📍<strong id="od"></strong>Destination</div><div class="card">📅<strong id="oday"></strong>Duration</div><div class="card">👥<strong id="ot"></strong>Travellers</div><div class="card">💰<strong id="ob"></strong>Budget</div></div>
+<h3>📅 Personalized Itinerary</h3><div id="itinerary"></div>
+<h3>💰 Estimated Budget</h3>
+<div class="budget-row"><span>🚌 Transport</span><b id="transport"></b></div><div class="budget-row"><span>🏨 Hotel</span><b id="hotel"></b></div><div class="budget-row"><span>🍴 Food</span><b id="food"></b></div><div class="budget-row"><span>🎯 Activities</span><b id="activities"></b></div><div class="budget-row"><span>🛍️ Miscellaneous</span><b id="misc"></b></div>
+<h3 style="margin-top:20px">🎒 Packing List</h3><p style="line-height:2">👕 Clothes · 👟 Shoes · 🧴 Sunscreen · 🕶️ Sunglasses · 📱 Charger · 💳 ID · 💊 Medicines</p>
+<p style="font-size:13px;color:#687386;margin-top:12px">Budget and itinerary are demo estimates, not live quotes or bookings.</p>
+</div></div></section>
+<section><div class="title"><h2>🌟 Why Arun Travels?</h2><p>Everything you need for a smarter journey.</p></div>
+<div class="features"><div class="feature"><h2>🤖</h2><h3>AI Planning</h3><p>Personalized travel plans based on your preferences.</p></div><div class="feature"><h2>💰</h2><h3>Budget Control</h3><p>Estimate and manage your complete trip expenses.</p></div><div class="feature"><h2>🗺️</h2><h3>Smart Routes</h3><p>Organize attractions into an efficient schedule.</p></div><div class="feature"><h2>🎒</h2><h3>Packing Assistant</h3><p>Generate a personalized travel checklist.</p></div></div></section>
+<section id="destinations"><div class="title"><h2>🌎 Popular Destinations</h2><p>Discover amazing places with Arun Travels.</p></div><div class="destinations">
+<div class="destination"><div class="pic">🏖️</div><div class="info"><h3>Goa</h3><p>Beaches, nightlife, water sports and amazing food.</p></div></div>
+<div class="destination"><div class="pic">🏔️</div><div class="info"><h3>Manali</h3><p>Mountains, adventure and beautiful valleys.</p></div></div>
+<div class="destination"><div class="pic">🏛️</div><div class="info"><h3>Hyderabad</h3><p>Historic places, shopping and delicious food.</p></div></div>
+<div class="destination"><div class="pic">🌴</div><div class="info"><h3>Kerala</h3><p>Backwaters, beaches, nature and relaxation.</p></div></div>
+<div class="destination"><div class="pic">🏰</div><div class="info"><h3>Rajasthan</h3><p>Forts, palaces, desert adventures and culture.</p></div></div>
+<div class="destination"><div class="pic">🌊</div><div class="info"><h3>Andaman</h3><p>Beautiful islands, beaches and water activities.</p></div></div>
+</div></section>
+<section class="assistant" id="ai"><div class="title"><h2>💬 Arun AI Travel Assistant</h2><p style="color:white">Ask anything about your trip.</p></div><div class="chat">
+<div class="chat-head">🤖 Arun AI — Demo Assistant</div><div class="messages" id="messages"><div class="msg">👋 Hi! I'm Arun AI. How can I help plan your journey?</div></div>
+<div class="chat-input"><input id="question" placeholder="Ask about Goa, budget, packing..."><button onclick="chat()">Send</button></div>
+</div><p style="text-align:center;margin-top:14px;font-size:13px">This demo assistant uses preset responses. Connect an AI API for live AI answers.</p></section>
+<footer><h2>✈️ Arun <span>Travels</span></h2><p>Explore More. Plan Smarter.</p><p style="margin-top:12px;color:#aaa">© 2026 Arun Travels</p></footer>
+<script>
+function money(n){return "₹"+Math.round(n).toLocaleString("en-IN")}
+function generatePlan(){
+const destination=document.getElementById("destination").value.trim()||"Goa";
+const travellers=Math.max(1,Number(document.getElementById("travellers").value)||2);
+const days=Math.min(30,Math.max(1,Number(document.getElementById("days").value)||4));
+const budget=Math.max(1,Number(document.getElementById("budget").value)||25000);
+document.getElementById("od").textContent=destination;
+document.getElementById("oday").textContent=days+" Days";
+document.getElementById("ot").textContent=travellers;
+document.getElementById("ob").textContent=money(budget);
+let interests=[...document.querySelectorAll(".interests input:checked")].map(x=>x.value);
+if(!interests.length)interests=["Sightseeing","Food","Nature"];
+const text={Beaches:"Visit beautiful beaches and enjoy sunset views.",Adventure:"Enjoy exciting adventure and outdoor activities.",Food:"Taste famous local dishes and explore popular restaurants.",Culture:"Visit historical places and experience local culture.",Nature:"Explore scenic locations, parks and natural attractions.",Nightlife:"Enjoy local nightlife and evening entertainment.",Shopping:"Explore local markets and shopping areas.",Sightseeing:"Visit popular tourist attractions."};
+let html="";
+for(let i=1;i<=days;i++){const interest=interests[(i-1)%interests.length];html+=`<div class="day"><h4>Day ${i} — ${escapeHTML(destination)}</h4><p>🌅 Morning: Breakfast and local exploration.<br>☀️ Afternoon: ${text[interest]||text.Sightseeing}<br>🌙 Evening: Dinner and relaxation.</p></div>`}
+document.getElementById("itinerary").innerHTML=html;
+document.getElementById("transport").textContent=money(budget*.20);
+document.getElementById("hotel").textContent=money(budget*.28);
+document.getElementById("food").textContent=money(budget*.17);
+document.getElementById("activities").textContent=money(budget*.20);
+document.getElementById("misc").textContent=money(budget*.08);
+document.getElementById("result").style.display="block";
+document.getElementById("result").scrollIntoView({behavior:"smooth",block:"start"});
+}
+function escapeHTML(s){return s.replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
+function chat(){
+const input=document.getElementById("question"),q=input.value.trim();if(!q)return;
+addMessage(q,true);input.value="";
+const l=q.toLowerCase();let answer;
+if(l.includes("goa"))answer="🏖️ Goa is great for beaches, nightlife, food and water sports. A 3–5 day trip may work well.";
+else if(l.includes("pack"))answer="🎒 Pack comfortable clothes, walking shoes, sunscreen, sunglasses, ID, medicines and chargers.";
+else if(l.includes("budget"))answer="💰 Divide your budget between transport, accommodation, food, activities and miscellaneous expenses. Use the planner for a rough estimate.";
+else if(l.includes("hotel"))answer="🏨 Compare accommodation by location, budget, reviews and access to attractions.";
+else if(l.includes("food"))answer="🍴 Try local restaurants and regional specialties for an authentic travel experience.";
+else if(l.includes("hello")||l==="hi")answer="👋 Hello! Tell me your destination, budget or interests and I'll help you plan.";
+else answer="🤖 I can help with destinations, hotels, food, budgets, activities, packing and itineraries. Try asking: What should I pack?";
+addMessage(answer,false);
+}
+function addMessage(text,isUser){const box=document.getElementById("messages"),div=document.createElement("div");div.className="msg"+(isUser?" user":"");div.textContent=text;box.appendChild(div);box.scrollTop=box.scrollHeight}
+document.getElementById("question").addEventListener("keydown",e=>{if(e.key==="Enter")chat()});
+</script>
+</body>
+</html>
